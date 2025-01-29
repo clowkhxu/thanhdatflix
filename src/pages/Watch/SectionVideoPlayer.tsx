@@ -47,13 +47,13 @@ const SectionVideoPlayer = () => {
 
   useEffect(() => {
     const encodeLink = async () => {
-      if (currentEpisode.link_m3u8) {
-        const encoded = await encryptWithAES(currentEpisode.link_m3u8, secretKey);
+      if (currentEpisode.link_embed) {
+        const encoded = await encryptWithAES(currentEpisode.link_embed, secretKey);
         setEncodedLink(encoded);
       }
     };
     encodeLink();
-  }, [currentEpisode.link_m3u8]);
+  }, [currentEpisode.link_embed]);
 
   return (
     <>
