@@ -79,7 +79,7 @@ const SectionVideoPlayer = () => {
               width: "100%",
               height: "100%",
             }}
-            src={`https://cdn-clowphim.blogspot.com/share/${encodedLink}`}
+            src={`https://rcp-clowphim.blogspot.com/share/${encodedLink}`}
             frameBorder="0"
             allow="fullscreen"
           ></iframe>
