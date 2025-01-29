@@ -1,0 +1,25 @@
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  backdrop-filter: blur(8px);
+  
+  @media (max-width: 1024px) {
+    padding: 0 16px;
+  }
+
+  .categorys,
+  .countrys {
+    display: "flex";
+    flex-direction: "row";
+    flex-wrap: "wrap";
+    max-width: "360px";
+    padding: "8px";
+  }
+}
