@@ -49,12 +49,6 @@ const Detail = () => {
   });
   const [breadcrumbsPaths, setBreadcrumbsPaths] = useState<string[]>([]);
 
-  const apiUrls = {
-    "phim-bo": "https://script.google.com/macros/s/AKfycbyo_0r86CElDEeUMakXyXrQG5h6lYRiAKQRQ3lgBYMDWz6Rr2pAT8ouwHpERqAhQTuWrg/exec?path=danh-sach/phim-bo",
-    "phim-le": "https://script.google.com/macros/s/AKfycbwXTAX_jUk9wK-RVxL45wv4oTU2C8eiwst5pTgQtp1qhIda5_dvXxyl3p1wW1gUgEHHGw/exec?path=danh-sach/phim-le",
-    "nam": "https://script.google.com/macros/s/AKfycbxnu3eYApgpMtEtoBluQSnAZX9jnJYXYxZYE5EI8FH3rQ2vwNenrjp9vbWbU1hEmt6VYw/exec?path=nam",
-  };
-
   useEffect(() => {
     document.title = titleHead;
   }, [titleHead]);
@@ -94,27 +88,10 @@ const Detail = () => {
   useEffect(() => {
     const handleInit = async () => {
       setIsLoading(true);
-
-      // Kiểm tra xem describe có hợp lệ trong apiUrls không
-      const describeKey = params.describe as keyof typeof apiUrls;
-      if (!apiUrls[describeKey]) {
-        console.error("Không tìm thấy URL hợp lệ cho describe:", describeKey);
-        setIsLoading(false);
-        return;
-      }
-
-      // Xây dựng URL API
-      let apiUrl = "";
-      if (describeKey === "nam") {
-        apiUrl = `${apiUrls[describeKey]}${params.slug ? `/${params.slug}` : ""}`;
-      } else {
-        apiUrl = apiUrls[describeKey];
-      }
-
-      // Gọi API mới
       await dispatch(
         getMovieDetail({
-          apiUrl,  // Truyền apiUrl vào
+          describe: params.describe as string,
+          slug: params.slug as string,
           page: currentPage,
           quantity: width < 467 ? 8 : 24,
         })
