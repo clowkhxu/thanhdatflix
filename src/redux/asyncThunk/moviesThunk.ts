@@ -74,7 +74,7 @@ export const getTelevisionSeries = createAsyncThunk(
   async (quantity: number) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_PHIM_BO}&limit=${quantity}` as string
+        `${process.env.REACT_APP_API_PHIM_BO}?limit=${quantity}` as string
       );
       const data = await response.json();
       return data;
@@ -132,43 +132,21 @@ export const getMovieInfo = createAsyncThunk(
 
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
-  async (rawData: IGetMovieDetail, { rejectWithValue }) => {
+  async (rawData: IGetMovieDetail) => {
     let { describe, slug, page, quantity } = rawData;
-
-    // Tạo URL API
-    const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}&page=${page}&limit=${quantity}`;
-
-    console.log("Fetching API:", baseApi); // Debug URL
-
     try {
-      // Timeout sau 10 giây nếu API không phản hồi
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-      const response = await fetch(baseApi, { signal: controller.signal });
-      clearTimeout(timeoutId); // Xóa timeout nếu request thành công
-
-      if (!response.ok) {
-        throw new Error(`HTTP Error! Status: ${response.status}`);
-      }
+      const baseApi = `${process.env.REACT_APP_API_BASE}/${describe}/${slug}`;
+      const response = await fetch(
+        `${baseApi}?page=${page}&limit=${quantity}` as string
+      );
 
       const data = await response.json();
-
-      // Kiểm tra xem API có trả về dữ liệu hợp lệ không
-      if (!data || !data.data) {
-        throw new Error("Invalid API response");
-      }
-
       return data.data;
-    } catch (error: any) {
-      console.error("Lỗi tải dữ liệu:", error.message || error);
-      return rejectWithValue(error.message || "Lỗi không xác định");
+    } catch (error) {
+      console.log(error);
     }
   }
 );
-
-
-
 
 export const searchMovie = createAsyncThunk(
   "movies/searchMovie",
