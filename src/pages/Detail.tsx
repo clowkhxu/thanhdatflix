@@ -6,18 +6,17 @@ import { AppDispatch, RootState } from "../redux/store";
 import { getMovieDetail } from "../redux/asyncThunk/moviesThunk";
 import LiveTvRoundedIcon from "@mui/icons-material/LiveTvRounded";
 import MovieList from "../components/movie/MovieList";
+import { Experimental_CssVarsProvider, Pagination, Stack } from "@mui/material";
+import BreadcrumbsCustom from "../components/BreadcrumbsCustom";
+import _ from "lodash";
 import SkeletonPage from "../components/common/SkeletonPage";
-import ShowBackground from "../components/common/ShowBackground";
-import _Pagination from "../components/common/_Pagination";
 import { generateYears, scrollToTop } from "../utils";
 import imageLoadingMovieError from "../images/loading-movie-error.png";
+import ShowBackground from "../components/common/ShowBackground";
+import _Pagination from "../components/common/_Pagination";
 
-// Tạo các mapping cho describe và slug
-const apiUrls = {
-  "phim-bo": "https://script.google.com/macros/s/AKfycbyo_0r86CElDEeUMakXyXrQG5h6lYRiAKQRQ3lgBYMDWz6Rr2pAT8ouwHpERqAhQTuWrg/exec?path=danh-sach/phim-bo",
-  "phim-le": "https://script.google.com/macros/s/AKfycbwXTAX_jUk9wK-RVxL45wv4oTU2C8eiwst5pTgQtp1qhIda5_dvXxyl3p1wW1gUgEHHGw/exec?path=danh-sach/phim-le",
-  nam: "https://script.google.com/macros/s/AKfycbxnu3eYApgpMtEtoBluQSnAZX9jnJYXYxZYE5EI8FH3rQ2vwNenrjp9vbWbU1hEmt6VYw/exec?path=nam",
-};
+type describe = Record<string, string>;
+type slug = Record<string, string>;
 
 const Detail = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -36,19 +35,25 @@ const Detail = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const params = useParams<{ describe: string; slug: string }>();
-  const [describeMapping, setDescribeMapping] = useState({
+  const [describeMapping, setDescribeMapping] = useState<describe>({
     "the-loai": "Thể loại",
     "quoc-gia": "Quốc gia",
     "danh-sach": "Danh sách",
     nam: "Năm",
   });
-  const [slugMapping, setSlugMapping] = useState({
+  const [slugMapping, setSlugMapping] = useState<slug>({
     "phim-bo": "Phim bộ",
     "phim-le": "Phim lẻ",
     "hoat-hinh": "Hoạt hình",
     "tv-shows": "Tv shows",
   });
   const [breadcrumbsPaths, setBreadcrumbsPaths] = useState<string[]>([]);
+
+  const apiUrls = {
+    "phim-bo": "https://script.google.com/macros/s/AKfycbyo_0r86CElDEeUMakXyXrQG5h6lYRiAKQRQ3lgBYMDWz6Rr2pAT8ouwHpERqAhQTuWrg/exec?path=danh-sach/phim-bo",
+    "phim-le": "https://script.google.com/macros/s/AKfycbwXTAX_jUk9wK-RVxL45wv4oTU2C8eiwst5pTgQtp1qhIda5_dvXxyl3p1wW1gUgEHHGw/exec?path=danh-sach/phim-le",
+    "nam": "https://script.google.com/macros/s/AKfycbxnu3eYApgpMtEtoBluQSnAZX9jnJYXYxZYE5EI8FH3rQ2vwNenrjp9vbWbU1hEmt6VYw/exec?path=nam",
+  };
 
   useEffect(() => {
     document.title = titleHead;
@@ -90,25 +95,23 @@ const Detail = () => {
     const handleInit = async () => {
       setIsLoading(true);
 
-      // Xây dựng URL động dựa trên describe và slug
-      const apiUrl = `${apiUrls[params.describe as string] || ""}/${params.slug ? params.slug : ""}`;
-
-      // Kiểm tra và gọi API
-      if (apiUrl) {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        dispatch(getMovieDetail({
-          movies: data.items,
-          pagination: data.pagination,
-          titlePage: data.titlePage,
-          titleHead: data.titleHead
-        }));
-
-        setIsLoading(false);
+      // Xây dựng URL API dựa trên describe và slug
+      let apiUrl = "";
+      if (params.describe === "nam") {
+        apiUrl = `${apiUrls[params.describe]}${params.slug ? `/${params.slug}` : ""}`;
       } else {
-        setIsLoading(false);
+        apiUrl = `${apiUrls[params.describe]}`;
       }
+
+      // Gọi API mới
+      await dispatch(
+        getMovieDetail({
+          apiUrl,  // Truyền apiUrl vào
+          page: currentPage,
+          quantity: width < 467 ? 8 : 24,
+        })
+      );
+      setIsLoading(false);
     };
     handleInit();
   }, [params?.slug, currentPage]);
