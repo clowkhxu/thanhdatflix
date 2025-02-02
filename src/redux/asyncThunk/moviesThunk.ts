@@ -135,12 +135,9 @@ export const getMovieDetail = createAsyncThunk(
   async (rawData: IGetMovieDetail) => {
     let { describe, slug, page, quantity } = rawData;
     try {
-      const baseApi = `${process.env.REACT_APP_API_BASE}/${describe}/${slug}`;
-      console.log("Generated URL: ", baseApi); // Log URL để kiểm tra
+      const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}`;
 
-      const response = await fetch(
-        `${baseApi}&page=${page}&limit=${quantity}` as string
-      );
+      const response = await fetch(`${baseApi}&page=${page}&limit=${quantity}`);
 
       const data = await response.json();
       return data.data;
@@ -149,6 +146,7 @@ export const getMovieDetail = createAsyncThunk(
     }
   }
 );
+
 
 
 export const searchMovie = createAsyncThunk(
