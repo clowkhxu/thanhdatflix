@@ -243,7 +243,7 @@ export const moviesSlice = createSlice({
       .addCase(searchMovie.fulfilled, (state, action) => {
         if (action.payload) {
           const { items } = action.payload;
-          const { totalItems, totalPages } = action.payload.params.pagination;
+          const { totalItems = 0, totalPages = 1 } = action.payload?.params?.pagination || {};
           const titleHead = action.payload?.seoOnPage?.titleHead;
           state.searchMovie.items = items;
           state.searchMovie.titleHead = titleHead;
