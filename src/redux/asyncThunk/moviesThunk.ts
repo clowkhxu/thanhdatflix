@@ -74,7 +74,7 @@ export const getTelevisionSeries = createAsyncThunk(
   async (quantity: number) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_PHIM_BO}?limit=${quantity}` as string
+        `${process.env.REACT_APP_API_PHIM_BO}&limit=${quantity}` as string
       );
       const data = await response.json();
       return data;
@@ -132,21 +132,36 @@ export const getMovieInfo = createAsyncThunk(
 
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
-  async (rawData: IGetMovieDetail) => {
+  async (rawData: IGetMovieDetail, { rejectWithValue }) => {
     let { describe, slug, page, quantity } = rawData;
+    const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}&page=${page}&limit=${quantity}`;
+
+    console.log("Fetching API:", baseApi); // Debug API URL
+
     try {
-      const baseApi = `${process.env.REACT_APP_API_BASE}/${describe}/${slug}`;
-      const response = await fetch(
-        `${baseApi}?page=${page}&limit=${quantity}` as string
-      );
+      const response = await fetch(baseApi);
+      if (!response.ok) {
+        throw new Error(`HTTP Error! Status: ${response.status}`);
+      }
 
       const data = await response.json();
+      console.log("API Response:", data); // Debug dữ liệu API trả về
+
+      // Kiểm tra nếu `data.data` không tồn tại hoặc không có `totalItems`
+      if (!data || !data.data || typeof data.data.totalItems === "undefined") {
+        throw new Error("Invalid API response: Missing data or totalItems");
+      }
+
       return data.data;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error("Lỗi tải dữ liệu:", error.message || error);
+      return rejectWithValue(error.message || "Lỗi không xác định");
     }
   }
 );
+
+
+
 
 export const searchMovie = createAsyncThunk(
   "movies/searchMovie",
