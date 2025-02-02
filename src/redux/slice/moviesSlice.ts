@@ -219,7 +219,7 @@ export const moviesSlice = createSlice({
           const { items, titlePage } = action.payload;
           const titleHead =
             action.payload?.seoOnPage?.titleHead ?? "Chi tiết phim";
-          const { totalItems, totalPages } = action.payload?.params?.pagination;
+          const { totalItems = 0, totalPages = 0 } = action.payload?.params?.pagination || {};
           state.movieDetail.items = items;
           state.movieDetail.titlePage = titlePage;
           state.movieDetail.titleHead = titleHead;
@@ -257,7 +257,7 @@ export const moviesSlice = createSlice({
       })
 
       // danh sách phim đã lưu và lịch sử xem
-      .addCase(getAllMovies.pending, (state, action) => {})
+      .addCase(getAllMovies.pending, (state, action) => { })
       .addCase(getAllMovies.fulfilled, (state, action) => {
         if (action.payload?.data?.type === "saved-movies") {
           state.savedMovies.movies = action.payload?.data?.movies ?? [];
@@ -265,17 +265,17 @@ export const moviesSlice = createSlice({
           state.watchHistory.movies = action.payload?.data?.movies ?? [];
         }
       })
-      .addCase(getAllMovies.rejected, (state, action) => {})
+      .addCase(getAllMovies.rejected, (state, action) => { })
 
       // search preview
-      .addCase(searchPreview.pending, (state, action) => {})
+      .addCase(searchPreview.pending, (state, action) => { })
       .addCase(searchPreview.fulfilled, (state, action) => {
         state.searchPreview = action.payload?.items ?? [];
       })
-      .addCase(searchPreview.rejected, (state, action) => {});
+      .addCase(searchPreview.rejected, (state, action) => { });
   },
 });
 
-export const {} = moviesSlice.actions;
+export const { } = moviesSlice.actions;
 
 export default moviesSlice.reducer;
