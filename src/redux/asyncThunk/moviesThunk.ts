@@ -133,11 +133,11 @@ export const getMovieInfo = createAsyncThunk(
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
   async (rawData: IGetMovieDetail) => {
-    let { describe, slug, page, quantity } = rawData;
+    const { describe, slug, page, quantity } = rawData;
     try {
       const baseApi = `${process.env.REACT_APP_API_BASE}/${describe}/${slug}`;
       const response = await fetch(
-        `${baseApi}&page=${page}&limit=${quantity}` as string
+        `${baseApi}?page=${page}&limit=${quantity}` // sửa lại dấu "&" thành "?" trước tham số
       );
 
       const data = await response.json();
