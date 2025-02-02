@@ -137,7 +137,7 @@ export const getMovieDetail = createAsyncThunk(
     try {
       const baseApi = `${process.env.REACT_APP_API_BASE}/${describe}/${slug}`;
       const response = await fetch(
-        `${baseApi}?page=${page}&limit=${quantity}` as string
+        `${baseApi}&page=${page}&limit=${quantity}` as string
       );
 
       const data = await response.json();
