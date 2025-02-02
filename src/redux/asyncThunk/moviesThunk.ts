@@ -118,8 +118,9 @@ export const getMovieInfo = createAsyncThunk(
   "movies/getMovieInfo",
   async (slug: string) => {
     try {
+      const keyword = "action"; // Ví dụ từ khóa tìm kiếm
       const response = await fetch(
-        `${process.env.REACT_APP_API_THONG_TIN_PHIM}/${slug}` as string
+        `https://script.google.com/macros/s/AKfycbzHvOYLPa4WFCjitdScNv0OpZqPL149yf9HRjfF724yMIk0UTEJA_-lNByC2ctsai3D3w/exec?path=tim-kiem&keyword=${keyword}`
       );
       const data = await response.json();
 
@@ -129,6 +130,7 @@ export const getMovieInfo = createAsyncThunk(
     }
   }
 );
+
 
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
