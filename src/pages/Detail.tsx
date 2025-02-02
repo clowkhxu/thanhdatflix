@@ -95,12 +95,20 @@ const Detail = () => {
     const handleInit = async () => {
       setIsLoading(true);
 
-      // Xây dựng URL API dựa trên describe và slug
+      // Kiểm tra xem describe có hợp lệ trong apiUrls không
+      const describeKey = params.describe as keyof typeof apiUrls;
+      if (!apiUrls[describeKey]) {
+        console.error("Không tìm thấy URL hợp lệ cho describe:", describeKey);
+        setIsLoading(false);
+        return;
+      }
+
+      // Xây dựng URL API
       let apiUrl = "";
-      if (params.describe === "nam") {
-        apiUrl = `${apiUrls[params.describe]}${params.slug ? `/${params.slug}` : ""}`;
+      if (describeKey === "nam") {
+        apiUrl = `${apiUrls[describeKey]}${params.slug ? `/${params.slug}` : ""}`;
       } else {
-        apiUrl = `${apiUrls[params.describe]}`;
+        apiUrl = apiUrls[describeKey];
       }
 
       // Gọi API mới
