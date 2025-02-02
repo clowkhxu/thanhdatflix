@@ -132,38 +132,20 @@ export const getMovieInfo = createAsyncThunk(
 
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
-  async (rawData: IGetMovieDetail, { rejectWithValue }) => {
+  async (rawData: IGetMovieDetail) => {
     let { describe, slug, page, quantity } = rawData;
-    const baseApi = `https://script.google.com/macros/s/AKfycbwiXuQzjwd0-LQB9Z9alnG7Rd0tsubbI64jnBfRR9y0vRe4pOwncxwIvIwmklNyhE5F/exec?path=${describe}/${slug}&page=${page}&limit=${quantity}`;
-
-    console.log("Fetching API:", baseApi); // Debug API URL
-
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout 10s
+      const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}`;
 
-      const response = await fetch(baseApi, { signal: controller.signal });
-      clearTimeout(timeoutId); // Xóa timeout nếu request thành công
-
-      if (!response.ok) {
-        throw new Error(`HTTP Error! Status: ${response.status}`);
-      }
+      const response = await fetch(`${baseApi}&page=${page}&limit=${quantity}`);
 
       const data = await response.json();
-      console.log("API Response:", data); // Debug dữ liệu API trả về
-
-      if (!data || !data.data) {
-        throw new Error("Invalid API response: Missing data");
-      }
-
       return data.data;
-    } catch (error: any) {
-      console.error("Lỗi tải dữ liệu:", error.message || error);
-      return rejectWithValue(error.message || "Lỗi không xác định");
+    } catch (error) {
+      console.log(error);
     }
   }
 );
-
 
 
 
@@ -174,15 +156,18 @@ export const searchMovie = createAsyncThunk(
 
     try {
       const baseApi: string =
-        `${process.env.REACT_APP_API_TIM_KIEM}&keyword=${keyword}&limit=${quantity}&page=${page}`;
+        `https://script.google.com/macros/s/AKfycbypa0NGILpqCU8nMtYOaS5CQOTBsZtZNR0KjGVhXdSTZghSh3-xg0oY3aGsMU0L6F4vww/exec?path=tim-kiem&keyword=${encodeURIComponent(keyword)}&limit=${quantity}&page=${page}`;
+
       const response = await fetch(baseApi);
       const data = await response.json();
       return data.data;
     } catch (error) {
       console.log(error);
+      return null;
     }
   }
 );
+
 
 export const searchPreview = createAsyncThunk(
   "movies/searchPreview",
