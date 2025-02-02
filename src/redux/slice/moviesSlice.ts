@@ -219,7 +219,15 @@ export const moviesSlice = createSlice({
           const { items, titlePage } = action.payload;
           const titleHead =
             action.payload?.seoOnPage?.titleHead ?? "Chi tiết phim";
-          const { totalItems = 0, totalPages = 0 } = action.payload?.params?.pagination || {};
+          const pagination = action.payload?.params?.pagination;
+          if (pagination) {
+            const { totalItems, totalPages } = pagination;
+            // Tiếp tục xử lý
+          } else {
+            // Xử lý khi không có pagination
+            console.error('Pagination is missing');
+          }
+
           state.movieDetail.items = items;
           state.movieDetail.titlePage = titlePage;
           state.movieDetail.titleHead = titleHead;
