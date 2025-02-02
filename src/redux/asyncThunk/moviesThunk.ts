@@ -132,20 +132,41 @@ export const getMovieInfo = createAsyncThunk(
 
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
-  async (rawData: IGetMovieDetail) => {
+  async (rawData: IGetMovieDetail, { rejectWithValue }) => {
     let { describe, slug, page, quantity } = rawData;
-    try {
-      const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}`;
 
-      const response = await fetch(`${baseApi}&page=${page}&limit=${quantity}`);
+    // Tạo URL API
+    const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}&page=${page}&limit=${quantity}`;
+
+    console.log("Fetching API:", baseApi); // Debug URL
+
+    try {
+      // Timeout sau 10 giây nếu API không phản hồi
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(baseApi, { signal: controller.signal });
+      clearTimeout(timeoutId); // Xóa timeout nếu request thành công
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error! Status: ${response.status}`);
+      }
 
       const data = await response.json();
+
+      // Kiểm tra xem API có trả về dữ liệu hợp lệ không
+      if (!data || !data.data) {
+        throw new Error("Invalid API response");
+      }
+
       return data.data;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error("Lỗi tải dữ liệu:", error.message || error);
+      return rejectWithValue(error.message || "Lỗi không xác định");
     }
   }
 );
+
 
 
 
