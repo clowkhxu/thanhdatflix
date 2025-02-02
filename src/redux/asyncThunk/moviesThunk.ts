@@ -174,7 +174,7 @@ export const searchMovie = createAsyncThunk(
 
     try {
       const baseApi: string =
-        `${process.env.REACT_APP_API_TIM_KIEM}?keyword=${keyword}&limit=${quantity}&page=${page}`;
+        `${process.env.REACT_APP_API_TIM_KIEM}&keyword=${keyword}&limit=${quantity}&page=${page}`;
       const response = await fetch(baseApi);
       const data = await response.json();
       return data.data;
