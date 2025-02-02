@@ -115,7 +115,7 @@ const Detail = () => {
   };
 
   if (isLoading && !isError) {
-    return <SkeletonPage page="detail" />;
+    return <SkeletonPage page="detail" /> />;
   }
 
   if (!isLoading && isError) {

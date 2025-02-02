@@ -136,6 +136,8 @@ export const getMovieDetail = createAsyncThunk(
     let { describe, slug, page, quantity } = rawData;
     try {
       const baseApi = `${process.env.REACT_APP_API_BASE}/${describe}/${slug}`;
+      console.log("Generated URL: ", baseApi); // Log URL để kiểm tra
+
       const response = await fetch(
         `${baseApi}&page=${page}&limit=${quantity}` as string
       );
@@ -147,6 +149,7 @@ export const getMovieDetail = createAsyncThunk(
     }
   }
 );
+
 
 export const searchMovie = createAsyncThunk(
   "movies/searchMovie",
