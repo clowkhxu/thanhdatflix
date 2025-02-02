@@ -132,20 +132,38 @@ export const getMovieInfo = createAsyncThunk(
 
 export const getMovieDetail = createAsyncThunk(
   "movies/getMovieDetail",
-  async (rawData: IGetMovieDetail) => {
+  async (rawData: IGetMovieDetail, { rejectWithValue }) => {
     let { describe, slug, page, quantity } = rawData;
-    try {
-      const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}`;
+    const baseApi = `https://script.google.com/macros/s/AKfycbz30XELbffKawQrTPgn_DBaT1iBkGUCxs6cMxUtRKhhh8QUBvjmfF0EGFLBWYGSYPGJgg/exec?path=${describe}/${slug}&page=${page}&limit=${quantity}`;
 
-      const response = await fetch(`${baseApi}&page=${page}&limit=${quantity}`);
+    console.log("Fetching API:", baseApi); // Debug API URL
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout 10s
+
+      const response = await fetch(baseApi, { signal: controller.signal });
+      clearTimeout(timeoutId); // Xóa timeout nếu request thành công
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error! Status: ${response.status}`);
+      }
 
       const data = await response.json();
+      console.log("API Response:", data); // Debug dữ liệu API trả về
+
+      if (!data || !data.data) {
+        throw new Error("Invalid API response: Missing data");
+      }
+
       return data.data;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error("Lỗi tải dữ liệu:", error.message || error);
+      return rejectWithValue(error.message || "Lỗi không xác định");
     }
   }
 );
+
 
 
 
