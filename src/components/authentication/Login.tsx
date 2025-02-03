@@ -88,8 +88,9 @@ const Login = ({ setOpen }: any) => {
   };
 
   const handleLoginGoogle = () => {
-    window.location.href = `${process.env.REACT_APP_API}/auth/google`;
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=463029945-kuiu9rkfkh0bc5965dpisi35520uqd6b.apps.googleusercontent.com&redirect_uri=https://thanhdatflix.vercel.app/callback&response_type=code&scope=email profile`;
   };
+
 
   return (
     <>
