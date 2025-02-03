@@ -11,6 +11,8 @@ import { login } from "../../redux/asyncThunk/userThunk";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import toast from "react-hot-toast";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+
 
 interface ValueInput {
   email: string;
@@ -87,8 +89,18 @@ const Login = ({ setOpen }: any) => {
     }
   };
 
+  import { GoogleLogin } from "@react-oauth/google";
+
   const handleLoginGoogle = () => {
-    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=463029945-kuiu9rkfkh0bc5965dpisi35520uqd6b.apps.googleusercontent.com&redirect_uri=https://thanhdatflix.vercel.app/callback&response_type=code&scope=email profile`;
+    GoogleLogin({
+      onSuccess: (credentialResponse) => {
+        console.log("Login Success:", credentialResponse);
+        // Lưu token vào Redux hoặc LocalStorage nếu cần
+      },
+      onError: () => {
+        console.log("Login Failed");
+      },
+    });
   };
 
 
@@ -169,14 +181,18 @@ const Login = ({ setOpen }: any) => {
         Quên mật khẩu?
       </Typography>
       <Divider sx={{ margin: "12px 0" }} />
-      <Button
-        onClick={() => handleLoginGoogle()}
-        variant={theme === "light" ? "soft" : "outlined"}
-        color="neutral"
-        startDecorator={<GoogleIcon />}
-      >
-        Đăng nhập với Google
-      </Button>
+
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
+          console.log("Login Success:", credentialResponse);
+          // Lưu token vào Redux hoặc LocalStorage nếu cần
+        }}
+        onError={() => {
+          console.log("Login Failed");
+        }}
+      />
+
+
       <Box
         sx={{
           display: "flex",
