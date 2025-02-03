@@ -25,7 +25,7 @@ const MovieList = ({ movies, page, isLoading, handleDeleteMovie }: IProps) => {
     <>
       {!isLoading && movies.length > 0 ? (
         <Box>
-          <Grid container spacing={1} sx={{ flexGrow: 1, "--Grid-columns": 16 }}>
+          <Grid container spacing={1} sx={{ flexGrow: 1, "--Grid-columns": { xs: 12, md: 16 } }}>
             {movies?.map((movie: IMovie, index) => (
               <Grid xs={6} sm={4} lg={2} md={3} key={index}>
                 <MovieItem
