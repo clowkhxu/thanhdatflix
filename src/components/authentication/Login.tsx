@@ -11,8 +11,6 @@ import { login } from "../../redux/asyncThunk/userThunk";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import toast from "react-hot-toast";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-
 
 interface ValueInput {
   email: string;
@@ -89,20 +87,9 @@ const Login = ({ setOpen }: any) => {
     }
   };
 
-  import { GoogleLogin } from "@react-oauth/google";
-
   const handleLoginGoogle = () => {
-    GoogleLogin({
-      onSuccess: (credentialResponse) => {
-        console.log("Login Success:", credentialResponse);
-        // Lưu token vào Redux hoặc LocalStorage nếu cần
-      },
-      onError: () => {
-        console.log("Login Failed");
-      },
-    });
+    window.location.href = `${process.env.REACT_APP_API}/auth/google`;
   };
-
 
   return (
     <>
@@ -181,18 +168,14 @@ const Login = ({ setOpen }: any) => {
         Quên mật khẩu?
       </Typography>
       <Divider sx={{ margin: "12px 0" }} />
-
-      <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log("Login Success:", credentialResponse);
-          // Lưu token vào Redux hoặc LocalStorage nếu cần
-        }}
-        onError={() => {
-          console.log("Login Failed");
-        }}
-      />
-
-
+      <Button
+        onClick={() => handleLoginGoogle()}
+        variant={theme === "light" ? "soft" : "outlined"}
+        color="neutral"
+        startDecorator={<GoogleIcon />}
+      >
+        Đăng nhập với Google
+      </Button>
       <Box
         sx={{
           display: "flex",

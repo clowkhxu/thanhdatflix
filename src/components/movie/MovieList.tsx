@@ -27,7 +27,7 @@ const MovieList = ({ movies, page, isLoading, handleDeleteMovie }: IProps) => {
         <Box>
           <Grid container spacing={1} sx={{ flexGrow: 1 }}>
             {movies?.map((movie: IMovie, index) => (
-              <Grid xs={6} sm={4} lg={2} md={3} key={index}>
+              <Grid xs={8} sm={4} md={2} lg={1} key={index}>
                 <MovieItem
                   movie={movie}
                   page={page as string}
@@ -37,6 +37,7 @@ const MovieList = ({ movies, page, isLoading, handleDeleteMovie }: IProps) => {
             ))}
           </Grid>
         </Box>
+
       ) : (
         <ShowBackground
           urlImage={searchNotFoundImg}
