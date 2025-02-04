@@ -219,10 +219,7 @@ export const moviesSlice = createSlice({
           const { items, titlePage } = action.payload;
           const titleHead =
             action.payload?.seoOnPage?.titleHead ?? "Chi tiết phim";
-          console.log(action.payload); // Kiểm tra xem `pagination` có tồn tại không
-          const { totalItems, totalPages } = action.payload?.pagination || {};
-          console.log(totalItems, totalPages); // Kiểm tra giá trị của `totalItems` và `totalPages`
-
+          const { totalItems, totalPages } = action.payload?.params?.pagination;
           state.movieDetail.items = items;
           state.movieDetail.titlePage = titlePage;
           state.movieDetail.titleHead = titleHead;
