@@ -174,7 +174,7 @@ export const searchPreview = createAsyncThunk(
   async (keyword: string) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_TIM_KIEM}?keyword=${keyword}&limit=10`
+        `https://script.google.com/macros/s/AKfycbypa0NGILpqCU8nMtYOaS5CQOTBsZtZNR0KjGVhXdSTZghSh3-xg0oY3aGsMU0L6F4vww/exec?path=tim-kiem&keyword=${keyword}&limit=10`
       );
       const data = await response.json();
       return data.data;
@@ -183,6 +183,7 @@ export const searchPreview = createAsyncThunk(
     }
   }
 );
+
 
 export const getAllMovies = createAsyncThunk(
   "movies/getAllMovies",
