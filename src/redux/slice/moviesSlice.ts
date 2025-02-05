@@ -219,7 +219,6 @@ export const moviesSlice = createSlice({
           const { items, titlePage } = action.payload;
           const titleHead =
             action.payload?.seoOnPage?.titleHead ?? "Chi tiết phim";
-          console.log("Payload data:", action.payload);
           const { totalItems, totalPages } = action.payload?.params?.pagination;
           state.movieDetail.items = items;
           state.movieDetail.titlePage = titlePage;
