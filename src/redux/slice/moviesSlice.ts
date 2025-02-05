@@ -213,83 +213,67 @@ export const moviesSlice = createSlice({
         state.isLoading = true;
         state.isError = false;
         state.movieDetail.items = [];
-        state.movieDetail.pagination = {
-          totalItems: 0,
-          totalItemsPerPage: 10,  // Giá trị mặc định cho số lượng item mỗi trang
-          currentPage: 1,
-          totalPages: 0,  // Trang tổng
-        };
       })
       .addCase(getMovieDetail.fulfilled, (state, action) => {
         if (action.payload) {
           const { items, titlePage } = action.payload;
-          const titleHead = action.payload?.seoOnPage?.titleHead ?? "Chi tiết phim";
-
-          // Lấy giá trị từ pagination, sử dụng giá trị mặc định nếu không có
-          const { pagination = {} } = action.payload?.params || {};
-          const { totalItems = 0, totalItemsPerPage = 10, currentPage = 1, totalPages = 0 } = pagination;
-
-          // Cập nhật lại các trường trong state
-          state.movieDetail.items = items || [];
-          state.movieDetail.titlePage = titlePage || "Phim";
+          const titleHead =
+            action.payload?.seoOnPage?.titleHead ?? "Chi tiết phim";
+          const { totalItems = 0, totalPages = 0, currentPage = 1, totalItemsPerPage = 10 } = pagination;
+          state.movieDetail.items = items;
+          state.movieDetail.titlePage = titlePage;
           state.movieDetail.titleHead = titleHead;
-          state.movieDetail.pagination = {
-            totalItems,
-            totalItemsPerPage,
-            currentPage,
-            totalPages,
-          };
+          state.movieDetail.pagination.totalItems = totalItems;
+          state.movieDetail.pagination.totalPages = totalPages;
         }
 
-        // Kiểm tra lỗi nếu không có items
         state.isError = !(action.payload?.items?.length > 0);
         state.isLoading = false;
       })
       .addCase(getMovieDetail.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-      });
-
+      })
 
       // tìm kiếm phim
       .addCase(searchMovie.pending, (state, action) => {
         state.isLoading = true;
         state.searchMovie.items = [];
       })
-    .addCase(searchMovie.fulfilled, (state, action) => {
-      if (action.payload) {
-        const { items } = action.payload;
-        const { totalItems = 0, totalPages = 1 } = action.payload?.params?.pagination || {};
-        const titleHead = action.payload?.seoOnPage?.titleHead;
-        state.searchMovie.items = items;
-        state.searchMovie.titleHead = titleHead;
-        state.searchMovie.pagination.totalItems = totalItems;
-        state.searchMovie.pagination.totalPages = totalPages;
-        state.isLoading = !action.payload;
-      }
-    })
-    .addCase(searchMovie.rejected, (state, action) => {
-      state.isLoading = false;
-    })
+      .addCase(searchMovie.fulfilled, (state, action) => {
+        if (action.payload) {
+          const { items } = action.payload;
+          const { totalItems = 0, totalPages = 1 } = action.payload?.params?.pagination || {};
+          const titleHead = action.payload?.seoOnPage?.titleHead;
+          state.searchMovie.items = items;
+          state.searchMovie.titleHead = titleHead;
+          state.searchMovie.pagination.totalItems = totalItems;
+          state.searchMovie.pagination.totalPages = totalPages;
+          state.isLoading = !action.payload;
+        }
+      })
+      .addCase(searchMovie.rejected, (state, action) => {
+        state.isLoading = false;
+      })
 
-    // danh sách phim đã lưu và lịch sử xem
-    .addCase(getAllMovies.pending, (state, action) => { })
-    .addCase(getAllMovies.fulfilled, (state, action) => {
-      if (action.payload?.data?.type === "saved-movies") {
-        state.savedMovies.movies = action.payload?.data?.movies ?? [];
-      } else {
-        state.watchHistory.movies = action.payload?.data?.movies ?? [];
-      }
-    })
-    .addCase(getAllMovies.rejected, (state, action) => { })
+      // danh sách phim đã lưu và lịch sử xem
+      .addCase(getAllMovies.pending, (state, action) => { })
+      .addCase(getAllMovies.fulfilled, (state, action) => {
+        if (action.payload?.data?.type === "saved-movies") {
+          state.savedMovies.movies = action.payload?.data?.movies ?? [];
+        } else {
+          state.watchHistory.movies = action.payload?.data?.movies ?? [];
+        }
+      })
+      .addCase(getAllMovies.rejected, (state, action) => { })
 
-    // search preview
-    .addCase(searchPreview.pending, (state, action) => { })
-    .addCase(searchPreview.fulfilled, (state, action) => {
-      state.searchPreview = action.payload?.items ?? [];
-    })
-    .addCase(searchPreview.rejected, (state, action) => { });
-},
+      // search preview
+      .addCase(searchPreview.pending, (state, action) => { })
+      .addCase(searchPreview.fulfilled, (state, action) => {
+        state.searchPreview = action.payload?.items ?? [];
+      })
+      .addCase(searchPreview.rejected, (state, action) => { });
+  },
 });
 
 export const { } = moviesSlice.actions;
