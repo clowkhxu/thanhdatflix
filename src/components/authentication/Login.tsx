@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { Box, Button, Divider, IconButton, Input, Typography } from "@mui/joy";
@@ -6,11 +5,12 @@ import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import GoogleIcon from "@mui/icons-material/Google";
 import { setType } from "../../redux/slice/systemSlice";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import _ from "lodash";
-import toast from "react-hot-toast";
+import { login } from "../../redux/asyncThunk/userThunk";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import toast from "react-hot-toast";
 
 interface ValueInput {
   email: string;
@@ -74,63 +74,22 @@ const Login = ({ setOpen }: any) => {
 
     if (check) {
       setIsLogin(true);
-      // Thực hiện logic đăng nhập nếu cần
+      const res: any = await dispatch(
+        login({
+          email: valueInput.email,
+          password: valueInput.password,
+        })
+      );
+      if (+res.payload?.EC !== 0) {
+        toast.error(res.payload?.EM);
+      }
       setIsLogin(false);
     }
   };
 
-  // Hàm xử lý đăng nhập bằng Google
-  const handleLoginGoogle = (response: any) => {
-    if (response.credential) {
-      // Lấy thông tin người dùng từ token JWT
-      const userObject = parseJwt(response.credential);
-      console.log(userObject); // Thông tin người dùng
-
-      // Lưu token hoặc thông tin người dùng vào localStorage hoặc sessionStorage
-      localStorage.setItem("authToken", response.credential);
-
-      // Chuyển hướng hoặc làm bất kỳ hành động nào sau khi đăng nhập thành công
-      window.location.href = '/dashboard'; // Chuyển hướng đến trang sau khi đăng nhập
-    }
+  const handleLoginGoogle = () => {
+    window.location.href = `${process.env.REACT_APP_API}/auth/google`;
   };
-
-  // Hàm giải mã JWT token
-  const parseJwt = (token: string) => {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-    );
-
-    return JSON.parse(jsonPayload);
-  };
-
-  useEffect(() => {
-    // Khởi tạo Google Login API với thông tin bạn cung cấp
-    window.google.accounts.id.initialize({
-      client_id: "463029945-kuiu9rkfkh0bc5965dpisi35520uqd6b.apps.googleusercontent.com", // Client ID của bạn
-      project_id: "clowtruyen-448900", // ID của dự án
-      auth_uri: "https://accounts.google.com/o/oauth2/auth", // URI xác thực
-      token_uri: "https://oauth2.googleapis.com/token", // URI token
-      auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs", // URL chứng chỉ
-      client_secret: "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", // Secret Key (không nên chia sẻ công khai)
-      callback: handleLoginGoogle, // Callback xử lý đăng nhập
-    });
-
-    // Render nút đăng nhập Google
-    window.google.accounts.id.renderButton(
-      document.getElementById("google-sign-in-button"),
-      {
-        theme: "outline",
-        size: "large",
-      }
-    );
-  }, []);
 
   return (
     <>
@@ -209,10 +168,14 @@ const Login = ({ setOpen }: any) => {
         Quên mật khẩu?
       </Typography>
       <Divider sx={{ margin: "12px 0" }} />
-
-      {/* Nút đăng nhập Google */}
-      <div id="google-sign-in-button"></div>
-
+      <Button
+        onClick={() => handleLoginGoogle()}
+        variant={theme === "light" ? "soft" : "outlined"}
+        color="neutral"
+        startDecorator={<GoogleIcon />}
+      >
+        Đăng nhập với Google
+      </Button>
       <Box
         sx={{
           display: "flex",

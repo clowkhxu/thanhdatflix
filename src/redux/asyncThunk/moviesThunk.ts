@@ -156,7 +156,7 @@ export const searchMovie = createAsyncThunk(
 
     try {
       const baseApi: string =
-        `https://script.google.com/macros/s/AKfycbypa0NGILpqCU8nMtYOaS5CQOTBsZtZNR0KjGVhXdSTZghSh3-xg0oY3aGsMU0L6F4vww/exec?path=tim-kiem&keyword=${encodeURIComponent(keyword)}&limit=${quantity}&page=${page}`;
+        `https://script.google.com/macros/s/AKfycbwoy5d0IYGkSEYZAj-4b0Ht5MdSq95RvGYXYCipE5wJhqPzYpJAHz-kaL1RwqxSpM76Yw/exec?path=tim-kiem&keyword=${encodeURIComponent(keyword)}&limit=${quantity}&page=${page}`;
 
       const response = await fetch(baseApi);
       const data = await response.json();
@@ -174,7 +174,7 @@ export const searchPreview = createAsyncThunk(
   async (keyword: string) => {
     try {
       const response = await fetch(
-        `https://script.google.com/macros/s/AKfycbypa0NGILpqCU8nMtYOaS5CQOTBsZtZNR0KjGVhXdSTZghSh3-xg0oY3aGsMU0L6F4vww/exec?path=tim-kiem&keyword=${keyword}&limit=10`
+        `https://script.google.com/macros/s/AKfycbwoy5d0IYGkSEYZAj-4b0Ht5MdSq95RvGYXYCipE5wJhqPzYpJAHz-kaL1RwqxSpM76Yw/exec?path=tim-kiem&keyword=${keyword}&limit=10`
       );
       const data = await response.json();
       return data.data;
