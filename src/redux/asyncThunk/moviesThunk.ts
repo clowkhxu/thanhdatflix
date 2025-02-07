@@ -135,7 +135,7 @@ export const getMovieDetail = createAsyncThunk(
   async (rawData: IGetMovieDetail) => {
     let { describe, slug, page, quantity } = rawData;
     try {
-      const baseApi = `https://script.google.com/macros/s/AKfycbzeAEkjRcj0JjFwBC63MSqs1nlSbpz2cKixX8x03dXk0v0ew3qrZFIcDKqS8EHhKoElKA/exec?path=${describe}/${slug}`;
+      const baseApi = `https://script.google.com/macros/s/AKfycbzHu67XgMeU0288JfRNQRBBWXjUiRegZ-352phJ7G-EHimQdIxpYpZ3wQbhs-ysbS8fNQ/exec?path=${describe}/${slug}`;
 
       const response = await fetch(`${baseApi}&page=${page}&limit=${quantity}`);
 

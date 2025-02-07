@@ -11,7 +11,6 @@ import { login } from "../../redux/asyncThunk/userThunk";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import toast from "react-hot-toast";
-import { auth, googleProvider, signInWithPopup } from "../../firebaseConfig";
 
 interface ValueInput {
   email: string;
@@ -88,14 +87,8 @@ const Login = ({ setOpen }: any) => {
     }
   };
 
-  const handleLoginGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      toast.success(`Đăng nhập thành công: ${user.displayName}`);
-    } catch (error: any) {
-      toast.error(`Lỗi đăng nhập: ${error.message}`);
-    }
+  const handleLoginGoogle = () => {
+    window.location.href = `${process.env.REACT_APP_API}/auth/google`;
   };
 
   return (
