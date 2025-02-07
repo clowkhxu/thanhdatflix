@@ -11,7 +11,7 @@ const theme = extendTheme({
         },
         background: {
           body: "#2c2e38", // Giữ nguyên
-          surface: "#1e1e1e", // Giữ nguyên
+          surface: "#212529", // Giữ nguyên
         },
         text: {
           primary: "#ffffff", // Giữ nguyên
