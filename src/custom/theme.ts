@@ -11,11 +11,11 @@ const theme = extendTheme({
         },
         background: {
           body: "#2c2e38", // Giữ nguyên
-          surface: "#212529", // Giữ nguyên
+          surface: "#1e1e1e", // Giữ nguyên
         },
         text: {
           primary: "#ffffff", // Giữ nguyên
-          secondary: "#b0bec5", // Giữ nguyên
+          secondary: "#191b24", // Giữ nguyên
         },
       },
     },
