@@ -5,8 +5,9 @@ const theme = extendTheme({
     dark: {
       palette: {
         primary: {
-          solidBg: "linear-gradient(39deg, #fecf59, #fff1cc)", // Giữ gradient chính
+          solidBg: "linear-gradient(39deg, #fecf59, #fff1cc)", // Gradient nền
           solidHoverBg: "#fecf59", // Màu hover cơ bản
+          solidColor: "#000000", // Màu chữ mặc định
         },
       },
     },
@@ -15,12 +16,15 @@ const theme = extendTheme({
     JoyButton: {
       styleOverrides: {
         root: {
-          background: "linear-gradient(39deg, #fecf59, #fff1cc)",
+          background: "linear-gradient(39deg, #fecf59, #fff1cc)", // Giữ gradient chính
+          color: "#000", // Chữ màu đen
           transition: "0.3s ease-in-out",
-          position: "relative", // Đảm bảo shadow hiển thị đúng
+          position: "relative",
+          fontWeight: "bold", // Cho chữ rõ hơn
           "&:hover": {
             background: "linear-gradient(39deg, #fff1cc, #fecf59)", // Đảo gradient khi hover
-            boxShadow: "0px 10px 20px 5px rgba(255, 241, 204, 0.6)", // Hiệu ứng ánh sáng tỏa xuống dưới
+            color: "#000", // Đảm bảo chữ vẫn là màu đen khi hover
+            boxShadow: "0px 10px 20px 5px rgba(255, 241, 204, 0.6)", // Hiệu ứng ánh sáng mờ xuống dưới
           },
         },
       },
