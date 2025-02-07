@@ -10,7 +10,7 @@ const theme = extendTheme({
           solidColor: "#000000", // Màu chữ đen
         },
         background: {
-          body: "#121212", // Giữ nguyên
+          body: "#2c2e38", // Giữ nguyên
           surface: "#1e1e1e", // Giữ nguyên
         },
         text: {
