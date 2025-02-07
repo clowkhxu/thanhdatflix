@@ -6,7 +6,7 @@ const theme = extendTheme({
       palette: {
         primary: {
           solidBg: "#1976d2",
-          solidHoverBg: "#42a5f5",
+          solidHoverBg: "#fecf59",
         },
         background: {
           body: "#121212",
