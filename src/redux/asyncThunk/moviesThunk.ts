@@ -59,7 +59,7 @@ export const getFeatureFilm = createAsyncThunk(
   async (quantity: number) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_PHIM_LE}?limit=${quantity}` as string
+        `${process.env.REACT_APP_API_PHIM_LE}&limit=${quantity}` as string
       );
       const data = await response.json();
       return data;
