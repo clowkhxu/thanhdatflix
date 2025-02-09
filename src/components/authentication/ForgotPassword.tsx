@@ -142,7 +142,7 @@ const ForgotPassword = ({ setOpen }: any) => {
           size="md"
           placeholder="Email"
           type="email"
-        
+
         />
         {!isValidInput.email && (
           <Typography level="title-sm" color="danger" sx={{ marginTop: "8px" }}>
