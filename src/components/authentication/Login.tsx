@@ -88,7 +88,7 @@ const Login = ({ setOpen }: any) => {
   };
 
   const handleLoginGoogle = () => {
-    window.location.href = `${process.env.REACT_APP_API}/auth/google`;
+    window.location.href = `https://clowphim-backend.onrender.com/auth/google`;
   };
 
   return (
