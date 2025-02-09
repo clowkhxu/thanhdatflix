@@ -26,19 +26,11 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "users/login",
-  async (rawData: ILogin, { getState }) => {
+  async (rawData: ILogin) => {
     try {
-      const state = getState(); // Lấy state để truy cập vào accessToken từ Redux store
-      const accessToken = state.auth.accessToken; // Giả sử token được lưu ở đây
-
-      const response = await axios.post(
+      const response: any = await axios.post(
         `${process.env.REACT_APP_API}/auth/login`,
-        rawData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Thêm token vào header
-          },
-        }
+        rawData
       );
       return response;
     } catch (error) {
@@ -46,7 +38,6 @@ export const login = createAsyncThunk(
     }
   }
 );
-
 
 export const forgotPassword = createAsyncThunk(
   "users/forgotPassword",
