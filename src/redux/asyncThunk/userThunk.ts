@@ -75,7 +75,7 @@ export const verifyToken = createAsyncThunk(
   async (rawData: IVerifyToken) => {
     try {
       const response: any = await axios.post(
-        `${process.env.REACT_APP_API}/auth/verify-token`,
+        "https://clowphim-servers.onrender.com/auth/verify-token", // Truyền thẳng URL vào đây
         rawData
       );
       return response;
@@ -84,6 +84,7 @@ export const verifyToken = createAsyncThunk(
     }
   }
 );
+
 
 export const logout = createAsyncThunk("users/logout", async () => {
   try {
