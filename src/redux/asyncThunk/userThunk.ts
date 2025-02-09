@@ -29,7 +29,7 @@ export const login = createAsyncThunk(
   async (rawData: ILogin) => {
     try {
       const response: any = await axios.post(
-        `${process.env.REACT_APP_API}/auth/login`,
+        "https://clowphim-servers.onrender.com/auth/login",
         rawData
       );
       return response;
@@ -38,6 +38,7 @@ export const login = createAsyncThunk(
     }
   }
 );
+
 
 export const forgotPassword = createAsyncThunk(
   "users/forgotPassword",
