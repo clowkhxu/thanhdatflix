@@ -26,11 +26,19 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "users/login",
-  async (rawData: ILogin) => {
+  async (rawData: ILogin, { getState }) => {
     try {
-      const response: any = await axios.post(
-        "https://clowphim-servers.onrender.com/auth/login",
-        rawData
+      const state = getState(); // Lấy state để truy cập vào accessToken từ Redux store
+      const accessToken = state.auth.accessToken; // Giả sử token được lưu ở đây
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/auth/login`,
+        rawData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Thêm token vào header
+          },
+        }
       );
       return response;
     } catch (error) {
@@ -75,7 +83,7 @@ export const verifyToken = createAsyncThunk(
   async (rawData: IVerifyToken) => {
     try {
       const response: any = await axios.post(
-        "https://clowphim-servers.onrender.com/auth/verify-token", // Truyền thẳng URL vào đây
+        `${process.env.REACT_APP_API}/auth/verify-token`,
         rawData
       );
       return response;
@@ -84,7 +92,6 @@ export const verifyToken = createAsyncThunk(
     }
   }
 );
-
 
 export const logout = createAsyncThunk("users/logout", async () => {
   try {
