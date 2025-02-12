@@ -16,9 +16,6 @@ const SectionListEpisodes = () => {
   const episodesFromStore = useSelector(
     (state: RootState) => state.movies.movieInfo.episodes
   );
-  const dubbedEpisodesFromStore = useSelector(
-    (state: RootState) => state.movies.movieInfo.dubbedEpisodes
-  );
   const watchedEpisodes = useSelector(
     (state: RootState) => state.watch.watchedEpisodes
   );
@@ -29,15 +26,32 @@ const SectionListEpisodes = () => {
   const dispatch: AppDispatch = useDispatch();
   const params = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [dubbedEpisodes, setDubbedEpisodes] = useState<Episode[]>([]);
   const currentEpisode = useSelector(
     (state: RootState) => state.watch.currentEpisode
   );
 
   useEffect(() => {
     setEpisodes(episodesFromStore.slice(0, 50));
-    setDubbedEpisodes(dubbedEpisodesFromStore.slice(0, 50));
-  }, [episodesFromStore, dubbedEpisodesFromStore]);
+  }, [episodesFromStore]);
+
+  useEffect(() => {
+    const currentEpisode = handleGetCurrentEpisodes();
+    if (episodes?.length > 0) {
+      if (!currentEpisode) {
+        dispatch(setCurrentEpisode(episodes[0]));
+      } else {
+        dispatch(setCurrentEpisode(currentEpisode));
+      }
+    }
+  }, [episodes, movieInfo]);
+
+  const handleGetCurrentEpisodes = () => {
+    const objCurrentEpisodes: any = watchedEpisodes.find(
+      (item) => item.slug === params.slug
+    );
+
+    return objCurrentEpisodes?.currentEpisode;
+  };
 
   const handleChangeEpisode = (item: Episode) => {
     dispatch(setCurrentEpisode(item));
@@ -55,47 +69,46 @@ const SectionListEpisodes = () => {
   };
 
   return (
-    <>
-      {/* Danh sách tập phim gốc */}
-      <Alert sx={{ flexDirection: "column", alignItems: "start", gap: "24px" }}>
-        <Typography startDecorator={<SubscriptionsOutlinedIcon />} level="title-lg">
-          Danh sách tập phim
-        </Typography>
-        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-          {episodes.map((item: Episode, index: number) => (
-            <Button
-              sx={{ flex: "auto" }}
-              key={index}
-              color={theme === "light" ? "primary" : "neutral"}
-              variant={item.slug === currentEpisode.slug ? "solid" : "soft"}
-              onClick={() => handleChangeEpisode(item)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </Box>
-      </Alert>
-
-      {/* Danh sách tập phim lồng tiếng */}
-      <Alert sx={{ flexDirection: "column", alignItems: "start", gap: "24px", marginTop: "24px" }}>
-        <Typography startDecorator={<SubscriptionsOutlinedIcon />} level="title-lg">
-          Danh sách tập phim lồng tiếng
-        </Typography>
-        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-          {dubbedEpisodes.map((item: Episode, index: number) => (
-            <Button
-              sx={{ flex: "auto" }}
-              key={index}
-              color={theme === "light" ? "primary" : "neutral"}
-              variant={item.slug === currentEpisode.slug ? "solid" : "soft"}
-              onClick={() => handleChangeEpisode(item)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </Box>
-      </Alert>
-    </>
+    <Alert sx={{ flexDirection: "column", alignItems: "start", gap: "24px" }}>
+      <Typography
+        startDecorator={<SubscriptionsOutlinedIcon />}
+        level="title-lg"
+      >
+        Danh sách tập phim
+      </Typography>
+      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+        {episodes.map((item: Episode, index: number) => (
+          <Button
+            sx={{ flex: "auto" }}
+            key={index}
+            color={theme === "light" ? "primary" : "neutral"}
+            variant={item.slug === currentEpisode.slug ? "solid" : "soft"}
+            onClick={() => handleChangeEpisode(item)}
+          >
+            {item.name}
+          </Button>
+        ))}
+      </Box>
+      {episodesFromStore?.length > 50 &&
+        episodes?.length < episodesFromStore?.length && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              marginTop: "24px",
+            }}
+          >
+            <ButtonSeeMore
+              originalData={episodesFromStore}
+              currentData={episodes}
+              countDisplay={50}
+              setData={setEpisodes}
+              title="tập phim"
+            />
+          </Box>
+        )}
+    </Alert>
   );
 };
 
