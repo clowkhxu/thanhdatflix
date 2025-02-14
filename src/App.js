@@ -1,43 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { auth, onAuthStateChanged, signOut } from "./firebase/firebaseConfig";
-import { checkUserRole } from "./firebase/checkRole";
+import { useState, useEffect } from "react";
+import { auth, db } from "./firebase/firebaseConfig";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import Login from "./components/Login";
+import Home from "./pages/Home"; // Import trang Home.tsx
 
-const App = () => {
-    const [user, setUser] = useState(null);
+function App() {
+    const [user, setUser] = useState < any > (null);
     const [isVIP, setIsVIP] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setUser(currentUser);
+
             if (currentUser) {
-                const hasVIPAccess = await checkUserRole(currentUser.uid);
-                setUser(currentUser);
-                setIsVIP(hasVIPAccess);
+                const userRef = doc(db, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists() && userSnap.data().role === "VIP") {
+                    setIsVIP(true);
+                } else {
+                    setIsVIP(false);
+                    await signOut(auth);
+                }
             } else {
-                setUser(null);
                 setIsVIP(false);
             }
+
             setLoading(false);
         });
 
         return () => unsubscribe();
     }, []);
 
-    if (loading) return <p>Đang kiểm tra thông tin...</p>;
+    if (loading) return <p>Đang kiểm tra quyền truy cập...</p>;
 
-    if (!user || !isVIP) {
-        return <Login onLogin={(user) => setUser(user)} />;
-    }
+    if (!user || !isVIP) return <Login onLoginSuccess={() => window.location.reload()} />;
 
     return (
         <div>
-            <h1>Chào mừng {user.email} đến với CLOWPHIM!</h1>
-            <p>Bạn có quyền truy cập vì bạn là VIP.</p>
             <button onClick={() => signOut(auth)}>Đăng xuất</button>
-            {/* Nội dung trang web chính */}
+            <Home /> {/* Hiển thị trang Home.tsx */}
         </div>
     );
-};
+}
 
 export default App;

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { auth, signInWithEmailAndPassword } from "../firebase/firebaseConfig";
+import { useState } from "react";
+import { auth } from "../firebase/firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-const Login = ({ onLogin }) => {
+function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -11,17 +12,17 @@ const Login = ({ onLogin }) => {
         setError("");
 
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            onLogin(userCredential.user);
-        } catch (err) {
-            setError("Sai thông tin đăng nhập!");
+            await signInWithEmailAndPassword(auth, email, password);
+            onLoginSuccess(); // Gọi callback khi đăng nhập thành công
+        } catch (error) {
+            setError("Đăng nhập thất bại! Vui lòng kiểm tra lại tài khoản.");
         }
     };
 
     return (
-        <div className="login-container">
+        <div>
             <h2>Đăng nhập</h2>
-            {error && <p className="error">{error}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
             <form onSubmit={handleLogin}>
                 <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 <input type="password" placeholder="Mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} required />
@@ -29,6 +30,6 @@ const Login = ({ onLogin }) => {
             </form>
         </div>
     );
-};
+}
 
 export default Login;
