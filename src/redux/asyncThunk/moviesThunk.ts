@@ -1,9 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../custom/axios";
 import { IGetMovieDetail } from "../../interfaces/movie";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-
 import {
   IAddMovie,
   IDeleteAllMovie,
