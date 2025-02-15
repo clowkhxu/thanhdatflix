@@ -9,6 +9,7 @@ import UserInfo from "../pages/UserInfo";
 import Watch from "../pages/Watch/Watch";
 import Authenticate from "../pages/Authenticate";
 import AnotherUserInfo from "../pages/AnotherUserInfo";
+import Login from "../firebase/Login"; // ✅ Import trang Login
 
 const publicRoutes = [
   { path: "/", component: Home },
@@ -21,6 +22,8 @@ const publicRoutes = [
   { path: "/trang-ca-nhan", component: UserInfo },
   { path: "/xem-thong-tin/:id", component: AnotherUserInfo },
   { path: "/authenticate", component: Authenticate },
+  { path: "/login", component: Login }, // ✅ Thêm route Login
   { path: "*", component: NotFound },
 ];
+
 export default publicRoutes;
