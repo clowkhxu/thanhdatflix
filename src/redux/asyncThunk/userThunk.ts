@@ -28,18 +28,21 @@ export const login = createAsyncThunk(
   "users/login",
   async (rawData: ILogin, { rejectWithValue }) => {
     try {
+      // Đảm bảo xóa token cũ trước khi login
+      localStorage.removeItem('token');
+      
       const response: any = await axios.post(
         `${process.env.REACT_APP_API}/auth/login`,
         rawData
       );
       
-      if (response?.error) {
-        return rejectWithValue(response);
+      if (response?.error || !response?.code) {
+        throw new Error(response?.message || 'Login failed');
       }
       
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error?.message || 'Login failed');
     }
   }
 );
@@ -78,25 +81,32 @@ export const verifyToken = createAsyncThunk(
   "users/verifyToken",
   async (rawData: IVerifyToken, { rejectWithValue }) => {
     try {
-      if (rawData.token) {
-        localStorage.removeItem('token');
-        localStorage.setItem('token', rawData.token);
+      // Kiểm tra token có hợp lệ không
+      if (!rawData.token || 
+          rawData.token === 'undefined' || 
+          rawData.token === 'null') {
+        throw new Error('Invalid token');
       }
+
+      // Lưu token mới
+      localStorage.setItem('token', rawData.token);
       
       const response: any = await axios.post(
         `${process.env.REACT_APP_API}/auth/verify-token`,
-        rawData
+        { token: rawData.token }
       );
       
-      if (response?.error || response?.statusCode === 401) {
+      if (response?.error || 
+          response?.statusCode === 401 || 
+          response?.message?.includes('TokenExpiredError')) {
         localStorage.removeItem('token');
-        return rejectWithValue(response);
+        throw new Error(response?.message || 'Token verification failed');
       }
       
       return response;
     } catch (error: any) {
       localStorage.removeItem('token');
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error?.message || 'Authentication failed');
     }
   }
 );
