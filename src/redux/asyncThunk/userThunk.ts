@@ -73,6 +73,10 @@ export const verifyToken = createAsyncThunk(
   "users/verifyToken",
   async (rawData: IVerifyToken) => {
     try {
+      if (rawData.token) {
+        localStorage.setItem('token', rawData.token);
+      }
+      
       const response: any = await axios.post(
         `${process.env.REACT_APP_API}/auth/verify-token`,
         rawData

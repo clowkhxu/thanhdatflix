@@ -6,6 +6,15 @@ const instance = axios.create({
   withCredentials: true,
 });
 
+// Thêm interceptor để gửi token trong header
+instance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token'); // hoặc từ cookie
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // tự động gọi api khi lỗi
 axiosRetry(instance, {
   retries: 3,
@@ -23,6 +32,11 @@ instance.interceptors.response.use(
     return response && response.data ? response.data : response;
   },
   function (error) {
+    if (error?.response?.status === 401) {
+      // Xử lý khi token hết hạn
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
     if (error && error.response && error.response.data) {
       return error.response.data;
     }
