@@ -26,23 +26,15 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "users/login",
-  async (rawData: ILogin, { rejectWithValue }) => {
+  async (rawData: ILogin) => {
     try {
-      // Đảm bảo xóa token cũ trước khi login
-      localStorage.removeItem('token');
-      
       const response: any = await axios.post(
         `${process.env.REACT_APP_API}/auth/login`,
         rawData
       );
-      
-      if (response?.error || !response?.code) {
-        throw new Error(response?.message || 'Login failed');
-      }
-      
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error?.message || 'Login failed');
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -79,34 +71,15 @@ export const updateUser = createAsyncThunk(
 
 export const verifyToken = createAsyncThunk(
   "users/verifyToken",
-  async (rawData: IVerifyToken, { rejectWithValue }) => {
+  async (rawData: IVerifyToken) => {
     try {
-      // Kiểm tra token có hợp lệ không
-      if (!rawData.token || 
-          rawData.token === 'undefined' || 
-          rawData.token === 'null') {
-        throw new Error('Invalid token');
-      }
-
-      // Lưu token mới
-      localStorage.setItem('token', rawData.token);
-      
       const response: any = await axios.post(
         `${process.env.REACT_APP_API}/auth/verify-token`,
-        { token: rawData.token }
+        rawData
       );
-      
-      if (response?.error || 
-          response?.statusCode === 401 || 
-          response?.message?.includes('TokenExpiredError')) {
-        localStorage.removeItem('token');
-        throw new Error(response?.message || 'Token verification failed');
-      }
-      
       return response;
-    } catch (error: any) {
-      localStorage.removeItem('token');
-      return rejectWithValue(error?.message || 'Authentication failed');
+    } catch (error) {
+      console.log(error);
     }
   }
 );
