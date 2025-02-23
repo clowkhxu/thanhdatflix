@@ -45,9 +45,29 @@ const Home = () => {
     handleInit();
   }, [dispatch]);
 
-  
   useEffect(() => {
     document.title = "Thế Giới Phim - Xem Phim Hay, Phim Mới Mỗi Ngày!";
+
+    // Cấm chuột phải
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
+    };
+
+    // Cấm phím F12
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "F12") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Dọn dẹp sự kiện khi component unmount
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (
