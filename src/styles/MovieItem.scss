@@ -1,0 +1,47 @@
+.movie-item {
+  height: 320px;
+  border: 1px solid rgba(61, 71, 81, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  transition: 0.3s;
+
+  @media (max-width: 768px) {
+    height: 260px;
+  }
+
+  img {
+    transition: 0.3s;
+  }
+
+  &:hover img {
+    filter: brightness(0.5);
+    transform: scale(1.1);
+
+    @media (max-width: 1024px) {
+      filter: unset;
+      transform: unset;
+    }
+  }
+
+  &:hover .movie-item-info {
+    bottom: 8px;
+
+    @media (max-width: 1024px) {
+      bottom: unset;
+    }
+  }
+
+  .movie-item-info {
+    position: absolute;
+    bottom: -100%;
+    left: 8px;
+    right: 8px;
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    transition: 0.3s;
+    border: 1px solid rgba(61, 71, 81, 0.3) ccc85;
+    padding: 8px;
+  }
+}
