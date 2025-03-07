@@ -17,6 +17,11 @@ const SlideItem = ({ item }: IProps) => {
   const isLargeScreen: boolean = width > 1024;
   const theme = useSelector((state: RootState) => state.system.theme);
 
+  const imageUrls = item?.poster_url ? item.poster_url.split(", ") : [];
+  const selectedImageUrl = imageUrls.length > 1 
+    ? imageUrls[Math.floor(Math.random() * imageUrls.length)] 
+    : imageUrls[0];
+
   return (
     <Box
       sx={{
@@ -50,7 +55,7 @@ const SlideItem = ({ item }: IProps) => {
           <img
             loading="lazy"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            src={item?.poster_url}
+            src={selectedImageUrl}
             alt={item?.name}
           />
         </Box>
