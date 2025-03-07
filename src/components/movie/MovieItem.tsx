@@ -30,6 +30,11 @@ const MovieItem = ({ movie, page, handleDeleteMovie }: IProps) => {
     setIsLoading(false);
   };
 
+  const imageUrls = movie?.poster_url ? movie.poster_url.split(", ") : [];
+  const selectedImageUrl = imageUrls.length > 1 
+    ? imageUrls[Math.floor(Math.random() * imageUrls.length)] 
+    : imageUrls[0];
+
   return (
     <Box className="movie-item">
       <Link to={`/thong-tin/${movie.slug}`}>
@@ -40,13 +45,9 @@ const MovieItem = ({ movie, page, handleDeleteMovie }: IProps) => {
             e.currentTarget.src = `${imageError}`;
           }}
           src={
-            (movie?.poster_url as string)?.includes(
-              process.env.REACT_APP_API_HINH_ANH as string
-            )
-              ? movie?.poster_url
-              : `${process.env.REACT_APP_API_HINH_ANH as string}/${
-                  movie?.poster_url
-                }`
+            selectedImageUrl?.includes(process.env.REACT_APP_API_HINH_ANH as string)
+              ? selectedImageUrl
+              : `${process.env.REACT_APP_API_HINH_ANH as string}/${selectedImageUrl}`
           }
           alt={movie.name}
         />
