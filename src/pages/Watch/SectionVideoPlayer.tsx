@@ -28,11 +28,10 @@ const SectionVideoPlayer = () => {
           if (response.data && response.data.encodedLink) {
             setEncodedLink(response.data.encodedLink);
           } else {
-            throw new Error('Không nhận được link mã hóa từ API');
+            throw new Error('');
           }
         } catch (err) {
-          console.error('Lỗi khi mã hóa link:', err);
-          setError('Không thể mã hóa link video. Vui lòng thử lại sau.');
+          
           
           try {
             const encoded = await encryptWithAES(currentEpisode.link_embed, "");
