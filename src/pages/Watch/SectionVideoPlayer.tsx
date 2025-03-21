@@ -34,9 +34,8 @@ const SectionVideoPlayer = () => {
           console.error('Lỗi khi mã hóa link:', err);
           setError('Không thể mã hóa link video. Vui lòng thử lại sau.');
           
-          // Fallback: Nếu API không hoạt động, thử mã hóa trực tiếp
           try {
-            const encoded = await encryptWithAES(currentEpisode.link_embed, "6848472821384434");
+            const encoded = await encryptWithAES(currentEpisode.link_embed, "");
             setEncodedLink(encoded);
           } catch (encryptError) {
           
