@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Alert, Box, Typography } from "@mui/joy";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
@@ -8,10 +8,84 @@ const SectionVideoPlayer = () => {
   const [encodedLink, setEncodedLink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const devToolsDetected = useRef(false);
   
   const currentEpisode = useSelector(
     (state: RootState) => state.watch.currentEpisode
   );
+
+  useEffect(() => {
+   
+    const handleKeyDown = (e: KeyboardEvent) => {
+    
+      if (e.keyCode === 123) {
+        e.preventDefault();
+        closeTab();
+        return false;
+      }
+      
+   
+      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+        e.preventDefault();
+        closeTab();
+        return false;
+      }
+      
+     
+      if (e.ctrlKey && e.keyCode === 85) {
+        e.preventDefault();
+        closeTab();
+        return false;
+      }
+    };
+    
+  
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+    
+   
+    const detectDevTools = () => {
+      const threshold = 160;
+      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+      const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+      
+      if (widthThreshold || heightThreshold) {
+        if (!devToolsDetected.current) {
+          devToolsDetected.current = true;
+          closeTab();
+        }
+      } else {
+        devToolsDetected.current = false;
+      }
+    };
+    
+   
+    const closeTab = () => {
+      window.close();
+   
+      window.location.href = "about:blank";
+    };
+    
+ 
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("contextmenu", handleContextMenu);
+    
+ 
+    const interval = setInterval(detectDevTools, 1000);
+    
+  
+    if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function() {};
+    }
+    
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("contextmenu", handleContextMenu);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const encodeLink = async () => {
@@ -20,7 +94,6 @@ const SectionVideoPlayer = () => {
         setError(null);
         
         try {
-      
           const response = await axios.post('https://api.clow.fun/api/encrypt', {
             data: currentEpisode.link_embed
           });
@@ -31,7 +104,8 @@ const SectionVideoPlayer = () => {
             throw new Error('');
           }
         } catch (err) {
-          
+          console.error('', err);
+          setError('');
           
           try {
             const encoded = await encryptWithAES(currentEpisode.link_embed, "");
@@ -48,7 +122,6 @@ const SectionVideoPlayer = () => {
     encodeLink();
   }, [currentEpisode.link_embed]);
 
- 
   async function encryptWithAES(data: string, key: string) {
     const encoder = new TextEncoder();
     const keyBuffer = encoder.encode(key);
@@ -137,5 +210,11 @@ const SectionVideoPlayer = () => {
     </>
   );
 };
+
+declare global {
+  interface Window {
+    __REACT_DEVTOOLS_GLOBAL_HOOK__?: any;
+  }
+}
 
 export default SectionVideoPlayer;
