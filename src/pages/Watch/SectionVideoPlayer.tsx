@@ -20,7 +20,7 @@ const SectionVideoPlayer = () => {
         setError(null);
         
         try {
-          // Mã hóa link trước khi gửi đến Blogger
+      
           const response = await axios.post('https://api.clow.fun/api/encrypt', {
             data: currentEpisode.link_embed
           });
@@ -39,7 +39,7 @@ const SectionVideoPlayer = () => {
             const encoded = await encryptWithAES(currentEpisode.link_embed, "6848472821384434");
             setEncodedLink(encoded);
           } catch (encryptError) {
-            console.error('Lỗi khi mã hóa trực tiếp:', encryptError);
+          
           }
         } finally {
           setIsLoading(false);
@@ -50,11 +50,11 @@ const SectionVideoPlayer = () => {
     encodeLink();
   }, [currentEpisode.link_embed]);
 
-  // Hàm mã hóa fallback nếu API không hoạt động
+ 
   async function encryptWithAES(data: string, key: string) {
     const encoder = new TextEncoder();
     const keyBuffer = encoder.encode(key);
-    const iv = crypto.getRandomValues(new Uint8Array(16)); // Random IV for AES
+    const iv = crypto.getRandomValues(new Uint8Array(16)); 
 
     const secretKey = await crypto.subtle.importKey(
       "raw",
@@ -94,7 +94,7 @@ const SectionVideoPlayer = () => {
         sx={{
           position: "relative",
           width: "100%",
-          paddingBottom: "56.25%", // 16:9 aspect ratio
+          paddingBottom: "56.25%", 
           borderRadius: "8px",
           border: "1px solid rgba(61, 71, 81, 0.3)",
           overflow: "hidden",
