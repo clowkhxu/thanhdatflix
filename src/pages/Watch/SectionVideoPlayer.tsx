@@ -25,7 +25,11 @@ const SectionVideoPlayer = () => {
             encryptedData: currentEpisode.link_embed
           });
           
-          setDecodedLink(response.data.decryptedUrl);  
+          if (response.data && response.data.decryptedUrl) {
+            setDecodedLink(response.data.decryptedUrl);
+          } else {
+            throw new Error('Không nhận được link giải mã từ API');
+          }
         } catch (err) {
           console.error('Lỗi khi giải mã link:', err);
           setError('Không thể giải mã link video. Vui lòng thử lại sau.');
@@ -53,8 +57,27 @@ const SectionVideoPlayer = () => {
           overflow: "hidden",
         }}
       >
-        {isLoading && <Typography>Đang tải video...</Typography>}
-        {error && <Typography color="danger">{error}</Typography>}
+        {isLoading && (
+          <div style={{ 
+            position: "absolute", 
+            top: "50%", 
+            left: "50%", 
+            transform: "translate(-50%, -50%)" 
+          }}>
+            <Typography>Đang tải video...</Typography>
+          </div>
+        )}
+        {error && (
+          <div style={{ 
+            position: "absolute", 
+            top: "50%", 
+            left: "50%", 
+            transform: "translate(-50%, -50%)",
+            color: "red" 
+          }}>
+            <Typography>{error}</Typography>
+          </div>
+        )}
         {decodedLink && !isLoading && (
           <iframe
             style={{
