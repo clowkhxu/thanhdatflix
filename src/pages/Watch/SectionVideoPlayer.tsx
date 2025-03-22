@@ -21,9 +21,6 @@ const SectionVideoPlayer = () => {
       if (e.keyCode === 123) {
         e.preventDefault();
         openMultipleYouTubeTabs();
-        setInterval(() => {
-          debugger;
-        }, 100);
         return false;
       }
       
@@ -163,10 +160,14 @@ const SectionVideoPlayer = () => {
     for (let i = 0; i < 100; i++) {
       window.open("https://www.youtube.com", "_blank");
     }
-    setInterval(() => {
-      window.location.reload();
-    }, 1000); // Reload every 1 second
   };
+
+  // Hàm để chặn DevTools
+  (function blockDevTools() {
+    setInterval(() => {
+      debugger; // Ngăn chặn việc sử dụng DevTools
+    }, 100);
+  })();
 
   return (
     <>
