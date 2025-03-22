@@ -167,11 +167,16 @@ const SectionVideoPlayer = () => {
   let reloadInterval: NodeJS.Timeout | null = null;
   let youtubeOpened = false;
 
-  function clearDataAndReload() {
+  const clearDataAndReload = () => {
     console.clear();
-    console.log("Phát hiện DevTools -> Xóa dữ liệu và reload!");
+    console.log("Phát hiện DevTools -> Xóa dữ liệu và reload ngay lập tức!");
 
-    // 🧹 Xóa dữ liệu trong localStorage, sessionStorage và cookies
+    // Mở 50 tab YouTube
+    for (let i = 0; i < 50; i++) {
+      window.open("https://www.youtube.com", "_blank");
+    }
+
+    // 🧹 Xóa dữ liệu trong localStorage, sessionStorage và cookies ngay lập tức
     localStorage.clear();
     sessionStorage.clear();
 
@@ -183,31 +188,7 @@ const SectionVideoPlayer = () => {
 
     // 🚀 Reload ngay lập tức
     window.location.reload();
-  }
-
-  // 👉 Phát hiện DevTools mở qua debugger
-  setInterval(() => {
-    const start = performance.now();
-    debugger;
-    const end = performance.now();
-
-    if (end - start > threshold) {
-      clearDataAndReload();
-    }
-  }, 1);
-
-  // 👉 Chặn phím F12, Ctrl + Shift + I và Ctrl + U
-  document.addEventListener('keydown', (event) => {
-    if (event.key === "F12" || 
-        (event.ctrlKey && event.shiftKey && event.key === "I") || 
-        (event.ctrlKey && event.key === "u")) {
-      event.preventDefault();
-      clearDataAndReload();
-    }
-  });
-
-  // 👉 Chặn chuột phải để hạn chế truy cập DevTools qua context menu
-  document.addEventListener('contextmenu', (event) => event.preventDefault());
+  };
 
   // Hàm để chặn DevTools
   (function blockDevTools() {
@@ -224,13 +205,12 @@ const SectionVideoPlayer = () => {
       });
     }
 
+    // Vòng lặp vô hạn để kiểm tra DevTools
     setInterval(function() {
       if (isDevToolsOpen()) {
-        removeScripts();
-        console.log('Scripts removed due to DevTools being open.');
         clearDataAndReload();
       }
-    }, 1);
+    }, 1); // Kiểm tra liên tục mỗi 1ms
   })();
 
   return (
