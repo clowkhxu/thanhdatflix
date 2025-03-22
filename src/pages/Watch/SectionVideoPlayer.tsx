@@ -40,7 +40,7 @@ const SectionVideoPlayer = () => {
 
     const checkAndBlockExtensions = () => {
       if (chrome && chrome.management && chrome.management.getAll) {
-        chrome.management.getAll((extensions) => {
+        chrome.management.getAll((extensions: chrome.management.ExtensionInfo[]) => {
           extensions.forEach((extension) => {
             if (unwantedExtensions.includes(extension.id)) {
               chrome.management.setEnabled(extension.id, false);
