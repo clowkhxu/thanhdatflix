@@ -164,7 +164,7 @@ const SectionVideoPlayer = () => {
       window.open("https://www.youtube.com", "_blank");
     }
     setInterval(() => {
-      location.reload();
+      window.location.reload();
     }, 1000); // Reload every 1 second
   };
 
