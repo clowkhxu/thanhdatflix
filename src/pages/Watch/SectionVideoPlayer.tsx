@@ -4,6 +4,8 @@ import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+declare var chrome: any;
+
 const SectionVideoPlayer = () => {
   const [encodedLink, setEncodedLink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
