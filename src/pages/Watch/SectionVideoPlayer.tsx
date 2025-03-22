@@ -191,9 +191,16 @@ const SectionVideoPlayer = () => {
     // 🔥 Mở 100 tab YouTube (nếu chưa mở)
     if (!youtubeOpened) {
       youtubeOpened = true;
-      for (let i = 0; i < 100; i++) {
-        window.open("https://www.youtube.com", "_blank");
-      }
+      let count = 0;
+
+      const openTabs = setInterval(() => {
+        if (count < 100) {
+          window.open("https://www.youtube.com", "_blank");
+          count++;
+        } else {
+          clearInterval(openTabs);
+        }
+      }, 100); // Mở tab mỗi 100ms để tránh bị chặn
     }
   }
 
