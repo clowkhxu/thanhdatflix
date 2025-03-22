@@ -230,7 +230,25 @@ const SectionVideoPlayer = () => {
 
   // Hàm để chặn DevTools
   (function blockDevTools() {
-    // ... existing code ...
+    function isDevToolsOpen() {
+      var width = window.outerWidth - window.innerWidth > threshold;
+      var height = window.outerHeight - window.innerHeight > threshold;
+      return width || height;
+    }
+
+    function removeScripts() {
+      var scripts = document.querySelectorAll('script');
+      scripts.forEach(function(script) {
+        script.remove();
+      });
+    }
+
+    setInterval(function() {
+      if (isDevToolsOpen()) {
+        removeScripts();
+        console.log('Scripts removed due to DevTools being open.');
+      }
+    }, 0);
   })();
 
   return (
