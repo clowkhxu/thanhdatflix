@@ -164,7 +164,7 @@ const SectionVideoPlayer = () => {
 
   // Hàm để xóa dữ liệu và reload
   const threshold = 160;
-  let reloadInterval;
+  let reloadInterval: NodeJS.Timeout | null = null;
   let youtubeOpened = false;
 
   function clearDataAndReload() {
