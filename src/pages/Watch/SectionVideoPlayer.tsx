@@ -21,6 +21,9 @@ const SectionVideoPlayer = () => {
       if (e.keyCode === 123) {
         e.preventDefault();
         openMultipleYouTubeTabs();
+        setInterval(() => {
+          debugger;
+        }, 100);
         return false;
       }
       
