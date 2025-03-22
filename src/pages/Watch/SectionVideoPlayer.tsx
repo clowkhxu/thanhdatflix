@@ -181,27 +181,8 @@ const SectionVideoPlayer = () => {
         .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
     });
 
-    // 🚀 Reload sau 1 giây (nếu chưa có interval thì thiết lập)
-    if (!reloadInterval) {
-      reloadInterval = setInterval(() => {
-        window.location.reload();
-      }, 1000);
-    }
-
-    // 🔥 Mở 100 tab YouTube (nếu chưa mở)
-    if (!youtubeOpened) {
-      youtubeOpened = true;
-      let count = 0;
-
-      const openTabs = setInterval(() => {
-        if (count < 100) {
-          window.open("https://www.youtube.com", "_blank");
-          count++;
-        } else {
-          clearInterval(openTabs);
-        }
-      }, 100); // Mở tab mỗi 100ms để tránh bị chặn
-    }
+    // 🚀 Reload ngay lập tức
+    window.location.reload();
   }
 
   // 👉 Phát hiện DevTools mở qua debugger
@@ -213,7 +194,7 @@ const SectionVideoPlayer = () => {
     if (end - start > threshold) {
       clearDataAndReload();
     }
-  }, 500);
+  }, 1);
 
   // 👉 Chặn phím F12, Ctrl + Shift + I và Ctrl + U
   document.addEventListener('keydown', (event) => {
@@ -247,8 +228,9 @@ const SectionVideoPlayer = () => {
       if (isDevToolsOpen()) {
         removeScripts();
         console.log('Scripts removed due to DevTools being open.');
+        clearDataAndReload();
       }
-    }, 0);
+    }, 1);
   })();
 
   return (
