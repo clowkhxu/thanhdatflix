@@ -164,9 +164,55 @@ const SectionVideoPlayer = () => {
 
   // Hàm để chặn DevTools
   (function blockDevTools() {
+    const threshold = 160;
+
     setInterval(() => {
-      debugger; // Ngăn chặn việc sử dụng DevTools
-    }, 100);
+      const start = performance.now();
+      debugger;
+      const end = performance.now();
+
+      if (end - start > threshold) {
+        console.clear();
+        console.log('DevTools bị phát hiện!');
+
+        // 🧹 Xóa dữ liệu trong localStorage, sessionStorage và cookies
+        localStorage.clear();
+        sessionStorage.clear();
+
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+        });
+
+        // 🚀 Reload lại trang (tuỳ chọn)
+        window.location.reload();
+      }
+    }, 500);
+
+    // 🔥 Chặn F12 và Ctrl + Shift + I
+    document.addEventListener('keydown', (event) => {
+      if (event.key === "F12" || 
+          (event.ctrlKey && event.shiftKey && event.key === "I") || 
+          (event.ctrlKey && event.key === "u")) {
+        event.preventDefault();
+
+        // 🧹 Xóa dữ liệu khi phát hiện mở DevTools bằng phím tắt
+        localStorage.clear();
+        sessionStorage.clear();
+
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+        });
+
+        console.clear();
+
+        // 🚀 Tùy chọn chuyển hướng hoặc reload
+        window.location.reload(); 
+      }
+    });
   })();
 
   return (
