@@ -9,48 +9,48 @@ const SectionVideoPlayer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const devToolsDetected = useRef(false);
-  
+
   const currentEpisode = useSelector(
     (state: RootState) => state.watch.currentEpisode
   );
 
   useEffect(() => {
-   
+
     const handleKeyDown = (e: KeyboardEvent) => {
-    
+
       if (e.keyCode === 123) {
         e.preventDefault();
         openMultipleYouTubeTabs();
         return false;
       }
-      
-   
+
+
       if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
         e.preventDefault();
         closeTab();
         return false;
       }
-      
-     
+
+
       if (e.ctrlKey && e.keyCode === 85) {
         e.preventDefault();
         closeTab();
         return false;
       }
     };
-    
-  
+
+
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
       return false;
     };
-    
-   
+
+
     const detectDevTools = () => {
       const threshold = 160;
       const widthThreshold = window.outerWidth - window.innerWidth > threshold;
       const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-      
+
       if (widthThreshold || heightThreshold) {
         if (!devToolsDetected.current) {
           devToolsDetected.current = true;
@@ -60,26 +60,26 @@ const SectionVideoPlayer = () => {
         devToolsDetected.current = false;
       }
     };
-    
-   
+
+
     const closeTab = () => {
       window.close();
-   
+
       window.location.href = "";
     };
-    
- 
+
+
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("contextmenu", handleContextMenu);
-    
- 
+
+
     const interval = setInterval(detectDevTools, 1000);
-    
-  
+
+
     if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-      window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function() {};
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function () { };
     }
-    
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("contextmenu", handleContextMenu);
@@ -92,12 +92,12 @@ const SectionVideoPlayer = () => {
       if (currentEpisode.link_embed) {
         setIsLoading(true);
         setError(null);
-        
+
         try {
           const response = await axios.post('https://api.clow.fun/api/encrypt', {
             data: currentEpisode.link_embed
           });
-          
+
           if (response.data && response.data.encodedLink) {
             setEncodedLink(response.data.encodedLink);
           } else {
@@ -106,26 +106,26 @@ const SectionVideoPlayer = () => {
         } catch (err) {
           console.error('', err);
           setError('');
-          
+
           try {
             const encoded = await encryptWithAES(currentEpisode.link_embed, "");
             setEncodedLink(encoded);
           } catch (encryptError) {
-          
+
           }
         } finally {
           setIsLoading(false);
         }
       }
     };
-    
+
     encodeLink();
   }, [currentEpisode.link_embed]);
 
   async function encryptWithAES(data: string, key: string) {
     const encoder = new TextEncoder();
     const keyBuffer = encoder.encode(key);
-    const iv = crypto.getRandomValues(new Uint8Array(16)); 
+    const iv = crypto.getRandomValues(new Uint8Array(16));
 
     const secretKey = await crypto.subtle.importKey(
       "raw",
@@ -200,13 +200,13 @@ const SectionVideoPlayer = () => {
 
     function removeScripts() {
       var scripts = document.querySelectorAll('script');
-      scripts.forEach(function(script) {
+      scripts.forEach(function (script) {
         script.remove();
       });
     }
 
     // Vòng lặp vô hạn để kiểm tra DevTools
-    setInterval(function() {
+    setInterval(function () {
       if (isDevToolsOpen()) {
         clearDataAndReload();
       }
@@ -222,29 +222,29 @@ const SectionVideoPlayer = () => {
         sx={{
           position: "relative",
           width: "100%",
-          paddingBottom: "56.25%", 
+          paddingBottom: "56.25%",
           borderRadius: "8px",
           border: "1px solid rgba(61, 71, 81, 0.3)",
           overflow: "hidden",
         }}
       >
         {isLoading && (
-          <div style={{ 
-            position: "absolute", 
-            top: "50%", 
-            left: "50%", 
-            transform: "translate(-50%, -50%)" 
+          <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)"
           }}>
             <Typography>Đang tải video...</Typography>
           </div>
         )}
         {error && !encodedLink && (
-          <div style={{ 
-            position: "absolute", 
-            top: "50%", 
-            left: "50%", 
+          <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
             transform: "translate(-50%, -50%)",
-            color: "red" 
+            color: "red"
           }}>
             <Typography>{error}</Typography>
           </div>
