@@ -16,75 +16,6 @@ const SectionVideoPlayer = () => {
 
   useEffect(() => {
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-
-      if (e.keyCode === 123) {
-        e.preventDefault();
-        openMultipleYouTubeTabs();
-        return false;
-      }
-
-
-      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-        e.preventDefault();
-        closeTab();
-        return false;
-      }
-
-
-      if (e.ctrlKey && e.keyCode === 85) {
-        e.preventDefault();
-        closeTab();
-        return false;
-      }
-    };
-
-
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-      return false;
-    };
-
-
-    const detectDevTools = () => {
-      const threshold = 160;
-      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-      const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-
-      if (widthThreshold || heightThreshold) {
-        if (!devToolsDetected.current) {
-          devToolsDetected.current = true;
-          closeTab();
-        }
-      } else {
-        devToolsDetected.current = false;
-      }
-    };
-
-
-    const closeTab = () => {
-      window.close();
-
-      window.location.href = "";
-    };
-
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("contextmenu", handleContextMenu);
-
-
-    const interval = setInterval(detectDevTools, 1000);
-
-
-    if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-      window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function () { };
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("contextmenu", handleContextMenu);
-      clearInterval(interval);
-    };
   }, []);
 
   useEffect(() => {
@@ -161,57 +92,6 @@ const SectionVideoPlayer = () => {
       window.open("https://www.youtube.com", "_blank");
     }
   };
-
-  // Hàm để xóa dữ liệu và reload
-  const threshold = 160;
-  let reloadInterval: NodeJS.Timeout | null = null;
-  let youtubeOpened = false;
-
-  const clearDataAndReload = () => {
-    console.clear();
-    console.log("Phát hiện DevTools -> Xóa dữ liệu và reload ngay lập tức!");
-
-    // Mở 50 tab YouTube
-    for (let i = 0; i < 50; i++) {
-      window.open("https://www.youtube.com", "_blank");
-    }
-
-    // 🧹 Xóa dữ liệu trong localStorage, sessionStorage và cookies ngay lập tức
-    localStorage.clear();
-    sessionStorage.clear();
-
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-    });
-
-    // 🚀 Reload ngay lập tức
-    window.location.reload();
-  };
-
-  // Hàm để chặn DevTools
-  (function blockDevTools() {
-    function isDevToolsOpen() {
-      var width = window.outerWidth - window.innerWidth > threshold;
-      var height = window.outerHeight - window.innerHeight > threshold;
-      return width || height;
-    }
-
-    function removeScripts() {
-      var scripts = document.querySelectorAll('script');
-      scripts.forEach(function (script) {
-        script.remove();
-      });
-    }
-
-    // Vòng lặp vô hạn để kiểm tra DevTools
-    setInterval(function () {
-      if (isDevToolsOpen()) {
-        clearDataAndReload();
-      }
-    }, 1); // Kiểm tra liên tục mỗi 1ms
-  })();
 
   return (
     <>
