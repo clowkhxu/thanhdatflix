@@ -87,11 +87,6 @@ const SectionVideoPlayer = () => {
       .replace(/=+$/, "");
   }
 
-  const openMultipleYouTubeTabs = () => {
-    for (let i = 0; i < 100; i++) {
-      window.open("https://www.youtube.com", "_blank");
-    }
-  };
 
   return (
     <>
