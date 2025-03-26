@@ -12,14 +12,9 @@ import {
 import { useParams } from "react-router-dom";
 import ButtonSeeMore from "../../components/common/ButtonSeeMore";
 
-interface IEpisodes {
-  server_name: string;
-  server_data: Episode[];
-}
-
 const SectionListEpisodes = () => {
   const episodesFromStore = useSelector(
-    (state: RootState) => state.movies.movieInfo.episodes as unknown as IEpisodes[]
+    (state: RootState) => state.movies.movieInfo.episodes
   );
   const watchedEpisodes = useSelector(
     (state: RootState) => state.watch.watchedEpisodes
@@ -50,7 +45,7 @@ const SectionListEpisodes = () => {
     }
   }, [episodes, movieInfo]);
 
-  const handleGetCurrentEpisodes = () => { 
+  const handleGetCurrentEpisodes = () => {
     const objCurrentEpisodes: any = watchedEpisodes.find(
       (item) => item.slug === params.slug
     );
@@ -94,22 +89,6 @@ const SectionListEpisodes = () => {
           </Button>
         ))}
       </Box>
-      {episodesFromStore.some((server: IEpisodes) => server.server_name === "#Lồng Tiếng") && (
-        <Box sx={{ marginTop: "24px" }}>
-          <Typography level="title-lg">Lồng Tiếng</Typography>
-          {episodesFromStore.find((server: IEpisodes) => server.server_name === "#Lồng Tiếng")?.server_data.map((item: Episode, index: number) => (
-            <Button
-              sx={{ flex: "auto" }}
-              key={index}
-              color={theme === "light" ? "primary" : "neutral"}
-              variant={item.slug === currentEpisode.slug ? "solid" : "soft"}
-              onClick={() => handleChangeEpisode(item)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </Box>
-      )}
       {episodesFromStore?.length > 50 &&
         episodes?.length < episodesFromStore?.length && (
           <Box
