@@ -12,6 +12,11 @@ import {
 import { useParams } from "react-router-dom";
 import ButtonSeeMore from "../../components/common/ButtonSeeMore";
 
+interface IEpisodes {
+  server_name: string;
+  server_data: Episode[];
+}
+
 const SectionListEpisodes = () => {
   const episodesFromStore = useSelector(
     (state: RootState) => state.movies.movieInfo.episodes
@@ -89,10 +94,10 @@ const SectionListEpisodes = () => {
           </Button>
         ))}
       </Box>
-      {episodesFromStore.some(server => server.server_name === "#Lồng Tiếng") && (
+      {episodesFromStore.some((server: IEpisodes) => server.server_name === "#Lồng Tiếng") && (
         <Box sx={{ marginTop: "24px" }}>
           <Typography level="title-lg">Lồng Tiếng</Typography>
-          {episodesFromStore.find(server => server.server_name === "#Lồng Tiếng").server_data.map((item: Episode, index: number) => (
+          {episodesFromStore.find((server: IEpisodes) => server.server_name === "#Lồng Tiếng")?.server_data.map((item: Episode, index: number) => (
             <Button
               sx={{ flex: "auto" }}
               key={index}
