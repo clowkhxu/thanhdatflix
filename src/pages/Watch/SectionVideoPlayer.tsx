@@ -90,6 +90,27 @@ const SectionVideoPlayer = () => {
 
   return (
     <>
+      <script>
+        {`
+          (function detectDevTools() {
+              const threshold = 160;
+
+              function checkDevTools() {
+                  const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                  const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                  const isOpen = widthThreshold || heightThreshold;
+
+                  if (isOpen) {
+                      location.reload();
+                  }
+
+                  requestAnimationFrame(checkDevTools);
+              }
+
+              requestAnimationFrame(checkDevTools);
+          })();
+        `}
+      </script>
       <Alert>
         <Typography level="title-lg">{currentEpisode.filename}</Typography>
       </Alert>
