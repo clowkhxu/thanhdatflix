@@ -19,7 +19,7 @@ interface IEpisodes {
 
 const SectionListEpisodes = () => {
   const episodesFromStore = useSelector(
-    (state: RootState) => state.movies.movieInfo.episodes as IEpisodes[]
+    (state: RootState) => state.movies.movieInfo.episodes as unknown as IEpisodes[]
   );
   const watchedEpisodes = useSelector(
     (state: RootState) => state.watch.watchedEpisodes
