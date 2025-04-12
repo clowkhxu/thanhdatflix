@@ -25,7 +25,7 @@ const SectionVideoPlayer = () => {
         setError(null);
 
         try {
-          const response = await axios.post('https://api.clow.fun/api/encrypt', {
+          const response = await axios.post('player-clowphim-production.up.railway.app/api/encrypt', {
             data: currentEpisode.link_embed
           });
 
